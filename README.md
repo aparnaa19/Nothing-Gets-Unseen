@@ -1,6 +1,8 @@
-# Nothing Gets Unseen: My Home Lab
+# SOC Home Lab: Network Traffic Analysis Lab Build
  
 A firewall, an attacker, a vulnerable web server and a network sensor, segmented into three zones and running on one 8 GB laptop. Every attack crosses the firewall and is recorded four ways.
+ 
+Want to build it yourself? Step-by-step commands are in [SETUP.md](SETUP.md).
  
 ## Overview
  
@@ -20,12 +22,12 @@ With 8 GB of host RAM, VMs are powered on per scenario instead of all at once: a
  
 ## Architecture
  
-<img src="images/image1.png" width="100%">
+<img src="image/1.png" width="100%">
 Kali sits alone in ATTACK, so any traffic it sends to CORP is routed and logged by OPNsense; sensor01 captures everything on CORP.
  
 ## How an attack becomes evidence
  
-<img src="images/image2.png" width="61%">
+<img src="image/2.png" width="61%">
 The firewall logs every decision, pass or block. Anything that reaches CORP is also copied to sensor01, where Zeek, Suricata and tcpdump each record it in their own way.
  
 ## Network and IP plan
@@ -46,12 +48,12 @@ DHCP reservations (Dnsmasq host entries) keep each lab machine on one address, s
 | kali     | 10.0.20.180 | 08:00:27:c3:fb:76 | Added       |
 | sensor01 | 10.0.10.158 | 08:00:27:36:2a:c1 | To add      |
  
-<img src="images/image3.png" width="100%">
+<img src="image/3.png" width="100%">
 *Figure 1: Dnsmasq host entries pinning web01 and kali to fixed addresses.*
  
 VirtualBox Internal Networks named CORP and ATTACK act as the two switches. Neither is reachable from the Windows host or the home network.
  
-<img src="images/image4.png" width="100%">
+<img src="image/4.png" width="100%">
 *Figure 2: The firewall VM's three adapters: NAT, CORP and ATTACK.*
  
 ## Machine inventory
@@ -74,13 +76,13 @@ Both Ubuntu servers run headless (no desktop) to save RAM. Suricata alone uses a
 3.  Assigned interfaces from the console: WAN = em0, LAN = em1, OPT1 = em2.
 4.  Set LAN to 10.0.10.1/24 and OPT1 to 10.0.20.1/24, each with a DHCP pool of .100 to .200.
 5.  Verified the console showed all three interfaces with their addresses.
-<img src="images/image5.png" width="100%">
+<img src="image/5.png" width="100%">
 *Figure 3: Downloading OPNsense: amd64 architecture, DVD image.*
  
-<img src="images/image6.png" width="100%">
+<img src="image/6.png" width="100%">
 *Figure 4: OPNsense console after setup: LAN 10.0.10.1, OPT1 10.0.20.1, WAN 10.0.2.15 by DHCP.*
  
-<img src="images/image7.png" width="100%">
+<img src="image/7.png" width="100%">
 *Figure 5: First ping from the firewall to 8.8.8.8: 3 of 3 replies.*
  
 ## 2. Attacker (Kali)
@@ -94,19 +96,19 @@ Both Ubuntu servers run headless (no desktop) to save RAM. Suricata alone uses a
 3.  Cloned DVWA from github.com/digininja/DVWA into /var/www/html/dvwa and created its config from config.inc.php.dist.
 4.  Created the dvwa database and user, gave Apache (www-data) ownership of the files, and enabled allow_url_include for the file inclusion module.
 5.  Verified with curl -I http://localhost/dvwa/ (HTTP 302 to login.php), ran the DVWA setup page and set the security level to Low.
-<img src="images/image8.png" width="87%">
+<img src="image/8.png" width="87%">
 *Figure 6: web01 receiving 10.0.10.184 from OPNsense's DHCP during install.*
  
-<img src="images/image9.png" width="100%">
+<img src="image/9.png" width="100%">
 *Figure 7: Ubuntu install complete, with updates downloaded from security.ubuntu.com through the firewall.*
  
-<img src="images/image10.png" width="100%">
+<img src="image/10.png" width="100%">
 *Figure 8: DVWA answering with HTTP 302, redirecting to login.php.*
  
-<img src="images/image11.png" width="99%">
+<img src="image/11.png" width="99%">
 *Figure 9: DVWA setup check: writable folders, PHP modules and the database all ready.*
  
-<img src="images/image12.png" width="100%">
+<img src="image/12.png" width="100%">
 *Figure 10: DVWA login page served from web01.*
  
 ## 4. Sensor (sensor01)
@@ -117,19 +119,19 @@ Both Ubuntu servers run headless (no desktop) to save RAM. Suricata alone uses a
 4.  Configured Zeek: interface enp0s3 in /opt/zeek/etc/node.cfg, JSON logs, deployed with zeekctl deploy, and a cron job running zeekctl cron every 5 minutes so Zeek restarts after a reboot.
 5.  Configured Suricata: downloaded the ET Open ruleset with suricata-update (69,546 rules, 53,571 enabled), set the capture interface to enp0s3 and HOME_NET to 10.0.10.0/24.
 6.  Verified Zeek was writing conn.log and Suricata was active (running).
-<img src="images/image13.png" width="100%">
+<img src="image/13.png" width="100%">
 *Figure 11: sensor01 receiving 10.0.10.158 on CORP.*
  
-<img src="images/image14.png" width="100%">
+<img src="image/14.png" width="100%">
 *Figure 12: Zeek pointed at enp0s3, switched to JSON logs and deployed: status running.*
  
-<img src="images/image15.png" width="100%">
+<img src="image/15.png" width="100%">
 *Figure 13: Zeek's first conn.log record: sensor01 syncing its clock (NTP, UDP 123).*
  
-<img src="images/image16.png" width="100%">
+<img src="image/16.png" width="100%">
 *Figure 14: suricata-update fetching the ET Open ruleset: 69,546 rules, 53,571 enabled.*
  
-<img src="images/image17.png" width="100%">
+<img src="image/17.png" width="100%">
 *Figure 15: Suricata active (running) after the startup-timeout fix.*
  
 ## Firewall configuration and evidence
@@ -140,14 +142,14 @@ OPT1 (ATTACK) started with no rules, so OPNsense's default deny dropped all of K
  
 A curl https://10.0.10.1 from Kali hung with no reply. The firewall's Live View, filtered on the source 10.0.20.180, showed why:
  
-<img src="images/image18.png" width="100%">
+<img src="image/18.png" width="100%">
 *Figure 16: Kali on ATTACK with 10.0.20.180; curl to the firewall hangs with no reply.*
  
 | Interface | Direction | Source        | Destination | Protocol | Action | Rule label                      |
 |---------------|---------------|-------------------|-----------------|--------------|------------|-------------------------------------|
 | OPT1          | In            | 10.0.20.180:44754 | 10.0.10.1:443   | TCP          | block      | Default deny / state violation rule |
  
-<img src="images/image19.png" width="100%">
+<img src="image/19.png" width="100%">
 *Figure 17: Firewall Live View: every packet from 10.0.20.180 blocked by the default deny rule.*
  
 The same source port repeated at growing intervals (about 1, 2, 4, 8 and 16 seconds apart): TCP retransmissions of a single SYN that the firewall silently dropped. A drop gives the client no reply, which is why curl hung instead of failing.
@@ -166,10 +168,10 @@ The same source port repeated at growing intervals (about 1, 2, 4, 8 and 16 seco
 | Log            | Yes                                                      |
 | Description    | ATTACK - allow all (lab baseline)                        |
  
-<img src="images/image20.png" width="80%">
+<img src="image/20.png" width="80%">
 *Figure 18: The allow rule on OPT1: pass, source OPT1 network, logging on.*
  
-<img src="images/image21.png" width="100%">
+<img src="image/21.png" width="100%">
 *Figure 19: The rule list with the new ATTACK baseline rule beside the default LAN rules.*
  
 ### After the rule: verification from Kali
@@ -180,7 +182,7 @@ The same source port repeated at growing intervals (about 1, 2, 4, 8 and 16 seco
 | 10.0.10.184 | Reply      | 63      | Traffic crosses the firewall into CORP (one hop subtracted) |
 | 8.8.8.8     | Reply      | 254     | NAT to the internet works                                   |
  
-<img src="images/image22.png" width="93%">
+<img src="image/22.png" width="93%">
 *Figure 20: Kali reaching the firewall (TTL 64), web01 (TTL 63) and the internet.*
  
 The allow-all rule is a lab baseline. Later exercises tighten it (for example, blocking SSH from ATTACK) to practice blocking and containment.
@@ -204,10 +206,10 @@ Twelve problems came up during the build. Each was isolated to one cause before 
 | Nov 18   | OPNsense install looped back to the installer menu            | The installer needs about 3 GB of RAM to copy files; the VM had 1 GB                                                                      | Raised the VM to 3 GB for the install, then back to 1 GB                        |
 | Nov 18   | The installer offered to install onto the ISO                 | cd0 (the installer disc) was preselected instead of ada0                                                                                  | Selected ada0, then removed the ISO before the first boot                       |
  
-<img src="images/image23.png" width="100%">
+<img src="image/23.png" width="100%">
 *Figure 21: Suricata's first restart failing with a systemd timeout.*
  
-<img src="images/image24.png" width="100%">
+<img src="image/24.png" width="100%">
 *Figure 22: OPNsense rejecting the MAC address entry with "Invalid MAC address".*
  
 ## Design decisions
@@ -227,6 +229,4 @@ Each choice trades realism against the 8 GB RAM limit; the lab favours realism w
 | Fixed addresses    | DHCP reservations in OPNsense    | Static IPs set on each host   | Addresses are managed centrally, and nothing on the hosts needs editing                                                          |
 | Servers            | Ubuntu Server, headless          | Ubuntu Desktop                | Runs in 768 MB to 1.5 GB instead of about 4 GB                                                                                   |
 | DVWA level         | Low                              | Medium, High, Impossible      | Clean attack traffic for learning detection; higher levels later test whether detections survive obfuscation                     |
- 
-
  
