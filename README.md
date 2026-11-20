@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="image/banner.svg" width="100%" alt="Nothing Gets Unseen: a home SOC lab where every attack gets caught">
-</p>
+<h1 align="center"> NOTHING GETS UNSEEN : MY HOME LAB </h1> 
 
 <p align="center">
   <img src="https://img.shields.io/badge/Firewall-OPNsense-D94F00?style=for-the-badge&logo=opnsense&logoColor=white" alt="OPNsense">
@@ -21,22 +19,9 @@
   <a href="#the-design">Design</a> ·
   <a href="#step-0-before-you-start">Build it yourself</a> ·
   <a href="#step-5-write-the-first-firewall-rule">The proof</a> ·
-  <a href="#troubleshooting-log">Troubleshooting</a> ·
-  <a href="#whats-next">What's next</a>
+  <a href="#troubleshooting-log">Troubleshooting</a> 
 </p>
 
-<div align="center">
-<table>
-  <tr>
-    <td align="center"><h3>4</h3><sub>virtual machines</sub></td>
-    <td align="center"><h3>3</h3><sub>isolated networks</sub></td>
-    <td align="center"><h3>53,571</h3><sub>detection rules</sub></td>
-    <td align="center"><h3>12</h3><sub>problems solved</sub></td>
-    <td align="center"><h3>8 GB</h3><sub>of RAM, total</sub></td>
-    <td align="center"><h3>3 days</h3><sub>to build</sub></td>
-  </tr>
-</table>
-</div>
 
 ---
 
@@ -131,8 +116,6 @@ Every attack leaves four records: a firewall log entry, Zeek connection logs, Su
 | Ubuntu Server 26.04.1 LTS | ubuntu.com/download/server |
 | 7-Zip | To extract the OPNsense `.iso.bz2` and the Kali `.7z` files |
 
-> [!TIP]
-> **Running on 8 GB?** Close your browser and other apps while the lab runs, and keep these instructions open on your phone. You only need all four VMs running during an attack.
 
 > [!WARNING]
 > DVWA (the target app) is vulnerable on purpose. Keep the lab on VirtualBox **Internal Networks** only, never on a bridged or home network.
