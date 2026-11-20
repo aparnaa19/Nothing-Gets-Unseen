@@ -1,4 +1,4 @@
-# SOC Home Lab: Network Traffic Analysis Lab Build
+# Nothing gets unseen: my home lab
  
 A firewall, an attacker, a vulnerable web server and a network sensor, segmented into three zones and running on one 8 GB laptop. Every attack crosses the firewall and is recorded four ways.
  
