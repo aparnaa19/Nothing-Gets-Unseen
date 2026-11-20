@@ -1,8 +1,9 @@
-<h1 align="center">Nothing gets unseen: my home lab</h1>
+# Nothing gets unseen: my home lab
  
-<p align="center">A firewall, an attacker, a vulnerable web server and a network sensor, segmented into three zones and running on one 8 GB laptop. Every attack crosses the firewall and is recorded four ways.</p>
-<p align="center">Want to build it yourself? Step-by-step commands are in <a href="SETUP.md">SETUP.md</a>.</p>
-<br>
+A firewall, an attacker, a vulnerable web server and a network sensor, segmented into three zones and running on one 8 GB laptop. Every attack crosses the firewall and is recorded four ways.
+ 
+Want to build it yourself? Step-by-step commands are in [SETUP.md](SETUP.md).
+ 
 ## Overview
  
 A segmented VirtualBox lab where every attack has to cross a firewall and is recorded by a dedicated network sensor. Four VMs run on a Lenovo Legion 5 Pro with 8 GB of RAM, stored on an external Seagate HDD.
@@ -30,7 +31,7 @@ Kali sits alone in ATTACK, so any traffic it sends to CORP is routed and logged 
 ## How an attack becomes evidence
  
 <p align="center">
-  <img src="image/2.png" width="480">
+  <img src="image/2.png" width="447">
 </p>
 <br>
 The firewall logs every decision, pass or block. Anything that reaches CORP is also copied to sensor01, where Zeek, Suricata and tcpdump each record it in their own way.
@@ -91,12 +92,15 @@ Both Ubuntu servers run headless (no desktop) to save RAM. Suricata alone uses a
   <em>Figure 3: Downloading OPNsense: amd64 architecture, DVD image.</em>
 </p>
 <br>
-<table>
-  <tr>
-    <td width="50%" align="center" valign="top"><img src="image/6.png" width="100%"><br><em>Figure 4: OPNsense console after setup: LAN 10.0.10.1, OPT1 10.0.20.1, WAN 10.0.2.15 by DHCP.</em></td>
-    <td width="50%" align="center" valign="top"><img src="image/7.png" width="100%"><br><em>Figure 5: First ping from the firewall to 8.8.8.8: 3 of 3 replies.</em></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="image/6.png" width="746"><br>
+  <em>Figure 4: OPNsense console after setup: LAN 10.0.10.1, OPT1 10.0.20.1, WAN 10.0.2.15 by DHCP.</em>
+</p>
+<br>
+<p align="center">
+  <img src="image/7.png" width="762"><br>
+  <em>Figure 5: First ping from the firewall to 8.8.8.8: 3 of 3 replies.</em>
+</p>
 <br>
 ## 2. Attacker (Kali)
  
@@ -109,24 +113,30 @@ Both Ubuntu servers run headless (no desktop) to save RAM. Suricata alone uses a
 3.  Cloned DVWA from github.com/digininja/DVWA into /var/www/html/dvwa and created its config from config.inc.php.dist.
 4.  Created the dvwa database and user, gave Apache (www-data) ownership of the files, and enabled allow_url_include for the file inclusion module.
 5.  Verified with curl -I http://localhost/dvwa/ (HTTP 302 to login.php), ran the DVWA setup page and set the security level to Low.
-<table>
-  <tr>
-    <td width="50%" align="center" valign="top"><img src="image/8.png" width="100%"><br><em>Figure 6: web01 receiving 10.0.10.184 from OPNsense's DHCP during install.</em></td>
-    <td width="50%" align="center" valign="top"><img src="image/9.png" width="100%"><br><em>Figure 7: Ubuntu install complete, with updates downloaded from security.ubuntu.com through the firewall.</em></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="image/8.png" width="638"><br>
+  <em>Figure 6: web01 receiving 10.0.10.184 from OPNsense's DHCP during install.</em>
+</p>
+<br>
+<p align="center">
+  <img src="image/9.png" width="840"><br>
+  <em>Figure 7: Ubuntu install complete, with updates downloaded from security.ubuntu.com through the firewall.</em>
+</p>
 <br>
 <p align="center">
   <img src="image/10.png" width="840"><br>
   <em>Figure 8: DVWA answering with HTTP 302, redirecting to login.php.</em>
 </p>
 <br>
-<table>
-  <tr>
-    <td width="50%" align="center" valign="top"><img src="image/11.png" width="100%"><br><em>Figure 9: DVWA setup check: writable folders, PHP modules and the database all ready.</em></td>
-    <td width="50%" align="center" valign="top"><img src="image/12.png" width="100%"><br><em>Figure 10: DVWA login page served from web01.</em></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="image/11.png" width="725"><br>
+  <em>Figure 9: DVWA setup check: writable folders, PHP modules and the database all ready.</em>
+</p>
+<br>
+<p align="center">
+  <img src="image/12.png" width="840"><br>
+  <em>Figure 10: DVWA login page served from web01.</em>
+</p>
 <br>
 ## 4. Sensor (sensor01)
  
@@ -136,25 +146,30 @@ Both Ubuntu servers run headless (no desktop) to save RAM. Suricata alone uses a
 4.  Configured Zeek: interface enp0s3 in /opt/zeek/etc/node.cfg, JSON logs, deployed with zeekctl deploy, and a cron job running zeekctl cron every 5 minutes so Zeek restarts after a reboot.
 5.  Configured Suricata: downloaded the ET Open ruleset with suricata-update (69,546 rules, 53,571 enabled), set the capture interface to enp0s3 and HOME_NET to 10.0.10.0/24.
 6.  Verified Zeek was writing conn.log and Suricata was active (running).
-<table>
-  <tr>
-    <td width="50%" align="center" valign="top"><img src="image/13.png" width="100%"><br><em>Figure 11: sensor01 receiving 10.0.10.158 on CORP.</em></td>
-    <td width="50%" align="center" valign="top"><img src="image/14.png" width="100%"><br><em>Figure 12: Zeek pointed at enp0s3, switched to JSON logs and deployed: status running.</em></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="image/13.png" width="649"><br>
+  <em>Figure 11: sensor01 receiving 10.0.10.158 on CORP.</em>
+</p>
+<br>
+<p align="center">
+  <img src="image/14.png" width="840"><br>
+  <em>Figure 12: Zeek pointed at enp0s3, switched to JSON logs and deployed: status running.</em>
+</p>
 <br>
 <p align="center">
   <img src="image/15.png" width="840"><br>
   <em>Figure 13: Zeek's first conn.log record: sensor01 syncing its clock (NTP, UDP 123).</em>
 </p>
 <br>
-<table>
-  <tr>
-    <td width="50%" align="center" valign="top"><img src="image/16.png" width="100%"><br><em>Figure 14: suricata-update fetching the ET Open ruleset: 69,546 rules, 53,571 enabled.</em></td>
-    <td width="50%" align="center" valign="top"><img src="image/17.png" width="100%"><br><em>Figure 15: Suricata active (running) after the startup-timeout fix.</em></td>
-  </tr>
-</table>
- 
+<p align="center">
+  <img src="image/16.png" width="840"><br>
+  <em>Figure 14: suricata-update fetching the ET Open ruleset: 69,546 rules, 53,571 enabled.</em>
+</p>
+<br>
+<p align="center">
+  <img src="image/17.png" width="840"><br>
+  <em>Figure 15: Suricata active (running) after the startup-timeout fix.</em>
+</p>
 <br>
 ## Firewall configuration and evidence
  
@@ -197,7 +212,7 @@ The same source port repeated at growing intervals (about 1, 2, 4, 8 and 16 seco
  
 <br>
 <p align="center">
-  <img src="image/20.png" width="480"><br>
+  <img src="image/20.png" width="537"><br>
   <em>Figure 18: The allow rule on OPT1: pass, source OPT1 network, logging on.</em>
 </p>
 <br>
@@ -216,7 +231,7 @@ The same source port repeated at growing intervals (about 1, 2, 4, 8 and 16 seco
  
 <br>
 <p align="center">
-  <img src="image/22.png" width="520"><br>
+  <img src="image/22.png" width="578"><br>
   <em>Figure 20: Kali reaching the firewall (TTL 64), web01 (TTL 63) and the internet.</em>
 </p>
 <br>
