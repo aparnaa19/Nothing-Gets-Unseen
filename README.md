@@ -4,22 +4,6 @@ A firewall, an attacker, a vulnerable web server and a network sensor, segmented
  
 Want to build it yourself? Step-by-step commands are in [SETUP.md](SETUP.md).
  
-## Overview
- 
-A segmented VirtualBox lab where every attack has to cross a firewall and is recorded by a dedicated network sensor. Four VMs run on a Lenovo Legion 5 Pro with 8 GB of RAM, stored on an external Seagate HDD.
- 
-| Skill area                    | Covered by                                               | Status  |
-|-------------------------------|----------------------------------------------------------|---------|
-| Network traffic analysis      | Zeek, tcpdump and Wireshark on sensor01                  | ![Built](https://img.shields.io/badge/Built-1a7f37?style=flat-square) |
-| Intrusion detection           | Suricata with the ET Open ruleset (53,571 enabled rules) | ![Built](https://img.shields.io/badge/Built-1a7f37?style=flat-square) |
-| Firewall                      | OPNsense rules, NAT and firewall logs                    | ![Built](https://img.shields.io/badge/Built-1a7f37?style=flat-square) |
-| Web attacks                   | DVWA on web01                                            | ![Built](https://img.shields.io/badge/Built-1a7f37?style=flat-square) |
-| Active Directory and identity | Existing AD VMs joined to CORP                           | ![Planned](https://img.shields.io/badge/Planned-6e7781?style=flat-square) |
-| Vulnerability management      | Scanner run against web01                                | ![Planned](https://img.shields.io/badge/Planned-6e7781?style=flat-square) |
-| SIEM                          | Splunk ingesting firewall, Zeek, Suricata and host logs  | ![Planned](https://img.shields.io/badge/Planned-6e7781?style=flat-square) |
- 
-With 8 GB of host RAM, VMs are powered on per scenario instead of all at once: all four only during an attack, then only sensor01 for the investigation.
- 
 ## Architecture
  
 <p align="center">
